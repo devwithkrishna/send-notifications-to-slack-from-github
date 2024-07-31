@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "send-notifications-to-slack-from-github"
+version = "0.1.0"
+description = ""
+authors = ["githubofkrishnadhas <krishnadhasnk1997@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+slack-sdk = "^3.31.0"
+python-dotenv = "^1.0.1"
+fontstyle = "^1.0.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
