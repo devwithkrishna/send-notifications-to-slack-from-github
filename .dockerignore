@@ -1,0 +1,4 @@
+image-references/**
+.gitignore
+LICENSE
+*.md

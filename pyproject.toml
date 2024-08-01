@@ -9,7 +9,6 @@ readme = "README.md"
 python = "^3.11"
 slack-sdk = "^3.31.0"
 python-dotenv = "^1.0.1"
-fontstyle = "^1.0.1.2"
 
 
 [build-system]

@@ -1,75 +1,84 @@
+import argparse
+import json
 import os
-import fontstyle
+from datetime import datetime, timezone
+
+from dotenv import load_dotenv
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from dotenv import load_dotenv
-from datetime import datetime
 
-def send_slack_notifications():
+
+def get_date_time():
+	""" get the date time back"""
+	# Get the current date and time in UTC
+	now_utc = datetime.now(timezone.utc)
+
+	# Format the date and time
+	formatted_datetime = now_utc.strftime('%Y-%m-%d %H:%M UTC')
+
+	return formatted_datetime
+
+
+def read_json_file_and_return_str(file_name: str):
 	"""
-	Send alerts / communication to slack workspace
+	Read the json file and return the formatted string
+	:param file_name:
+	:return:
+	"""
+	with open(file_name, 'r') as file:
+		data = json.load(file)
+	formatted_data = json.dumps(data, indent=4)
+	# print(f'{formatted_data}')
+	return formatted_data
+
+
+def send_slack_msg_notification(channel_id: str, bot_name: str, text: str):
+	"""
+	send slack message as alert. No file upload through this function
+	:param channel_id:
+	:param bot_name:
+	:param default_message:
+	:param file_name:
 	:return:
 	"""
 	slack_token = os.getenv('SLACK_TOKEN')
 	# Initialize a slack WebClient instance with your token
 	client = WebClient(token=slack_token)
-	# bot name
-	bot_name = "alerts-bot"
 
-	# The channel ID or name where you want to send the message
-	# channel_id = "alerts"
-	channel_id = "C07EVSM8EUS"
-
-	message = "This is being tested by githubofkrishnadhas :slack: "
-
-	# json array attachment
-	json = [
-  {
-    "title": "To Kill a Mockingbird",
-    "author": "Harper Lee",
-    "year_published": 1960,
-    "genre": "Fiction",
-    "isbn": "978-0-06-112008-4"
-  },
-  {
-    "title": "1984",
-    "author": "George Orwell",
-    "year_published": 1949,
-    "genre": "Dystopian",
-    "isbn": "978-0-452-28423-4"
-  },
-  {
-    "title": "The Great Gatsby",
-    "author": "F. Scott Fitzgerald",
-    "year_published": 1925,
-    "genre": "Tragedy",
-    "isbn": "978-0-7432-7356-5"
-  },
-  {
-    "title": "Pride and Prejudice",
-    "author": "Jane Austen",
-    "year_published": 1813,
-    "genre": "Romance",
-    "isbn": "978-0-19-280238-5"
-  }
-]
-
-
-	text = fontstyle.apply(json,'RED/ ITALIC/ BOLD')
-	print(text)
-
-	# for item in json:
-
+	# try catch block
 	try:
-			# Use the chat.postMessage method to send a message to the channel
-			response = client.chat_postMessage(channel=channel_id, text=str(message), username=bot_name)
-			print("Message sent successfully!")
+		response = client.chat_postMessage(channel=channel_id, text=text, username=bot_name)
+		print("Message sent successfully!")
+		print(f"The message is:\t  \n{response.data['message']['text']}")
 
-			upload_file = client.files_upload_v2(channel=channel_id, filename='imgqqq.png', file='img.png')
-			print("File sent successfully")
 	except SlackApiError as e:
+		print(f"Error sending message: {e.response['error']}")
+
+def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: str, file_name: str):
+	"""
+	Send alerts / communication to slack workspace
+	:param bot_name str
+	:param channel_id str
+	:param text str
+	:param file_name str
+	:return:
+	"""
+	slack_token = os.getenv('SLACK_TOKEN')
+	# Initialize a slack WebClient instance with your token
+	client = WebClient(token=slack_token)
+	# Split the comma-separated string into a list of file names
+	files = [file.strip() for file in file_name.split(',')]
+	# try catch block
+	for file in files:
+		try:
+			# extract file names in case files are inside nested folders
+			file_name = os.path.basename(file)
+			# Upload each file individually
+			upload_file = client.files_upload_v2(channel=channel_id, filename=file_name, file=file)
+			print(f"File {file} sent successfully to Slack channel {channel_id}")
+		except SlackApiError as e:
 			# Error handling in case the message fails to send
-			print(f"Error sending message: {e}")
+			print(f"Error sending message: {e.response['error']}")
 
 
 def main():
@@ -78,8 +87,23 @@ def main():
 	:return:
 	"""
 	load_dotenv()
-	send_slack_notifications()
+	parser = argparse.ArgumentParser("Arguments for Slack channel notification")
+	parser.add_argument("--channel_id", help="Slack Channel ID", type=str, required=True)
+	parser.add_argument("--bot_name", help="Slack bot name", type=str, required=True)
+	parser.add_argument("--file_name", help="File / content to be uploaded to slack", type=str, required=True)
 
+	args = parser.parse_args()
+
+	print(f'Process started at {get_date_time()}')
+	print("Processing optional input arguments....")
+
+	channel_id = args.channel_id
+	bot_name = args.bot_name
+	file_name = args.file_name
+
+	send_slack_notifications_with_only_file_upload(channel_id=channel_id, bot_name=bot_name, file_name=file_name)
+
+	print(f'Process completed at {get_date_time()}')
 
 if __name__ == "__main__":
 	main()
