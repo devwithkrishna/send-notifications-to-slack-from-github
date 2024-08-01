@@ -1,0 +1,24 @@
+name: "Send notification from slack to Github"
+description: "GitHub Action for sending notification from github workflow to slack"
+author: "githubofkrishnadhas"
+branding:
+  icon: 'activity'
+  color: 'gray-dark'
+inputs:
+  channel_id:
+    description: "Slack channel id"
+    required: true
+  bot_name:
+    description: "Slack bot name"
+    required: true
+  file_name:
+    description: "files to be send to slack. if more than one seperate by comma"
+    required: false
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.channel_id }}
+    - ${{ inputs.bot_name }}
+    - ${{ inputs.file_name }}
