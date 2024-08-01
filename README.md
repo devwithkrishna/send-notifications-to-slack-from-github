@@ -14,6 +14,8 @@ whether working remotely or in the office
 
 * How to do it will be available in [prerequisites.md](prerequisites.md) file
 
+* **Configure your slack token as a secret named `SLACK_TOKEN`**
+
 
 # Input parameters
 | Input      | Description  | Required   |
@@ -34,6 +36,29 @@ whether working remotely or in the office
 * A GitHub workflow will be triggered with necessary input params and that can upload a file or a message to the specific Slack channel as a bot.
 
 * The file can be of any type a json file, an image, an Excel or a xml. It Doesnt matter as long as you provide right name.
+
+# General Usage
+
+```markdown
+    - name: send slack notification
+      uses: devwithkrishna/send-notifications-to-slack-from-github@v1.0.0
+      with:
+        channel_id: "your channel id here" 
+        bot_name: "your bot name here"
+        file_name: "your file to be uploaded here. more than 1 seperate by comma"
+```
+
+# Sending multiple files to slack
+```markdown
+    - name: send slack notification
+      uses: devwithkrishna/send-notifications-to-slack-from-github@v1.0.0
+      with:
+        channel_id: "C07EUSM8EVS" 
+        bot_name: "demo-bot"
+        file_name: "new/github-slack.jpg, data.json, data1.csv, abc/demo.txt"
+```
+* This will send the file named `github-slack.jpg` inside `folder new`, `data.json and sata1.csv in workspace`, 
+  and `demo.txt inside abc folder` to the slack channel with id `C07EUSM8EVS` 
 
 # Reference
 
