@@ -73,8 +73,10 @@ def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: st
 		try:
 			# extract file names in case files are inside nested folders
 			file_name = os.path.basename(file)
+			# get absolute path
+			full_path = os.path.abspath(file)
 			# Upload each file individually
-			upload_file = client.files_upload_v2(channel=channel_id, filename=file_name, file=file)
+			upload_file = client.files_upload_v2(channel=channel_id, filename=file_name, file=full_path)
 			print(f"File {file} sent successfully to Slack channel {channel_id}")
 		except SlackApiError as e:
 			# Error handling in case the message fails to send
@@ -95,7 +97,6 @@ def main():
 	args = parser.parse_args()
 
 	print(f'Process started at {get_date_time()}')
-	print("Processing optional input arguments....")
 
 	channel_id = args.channel_id
 	bot_name = args.bot_name
