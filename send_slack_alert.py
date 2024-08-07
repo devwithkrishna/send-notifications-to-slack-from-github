@@ -63,6 +63,7 @@ def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: st
 	:param file_name str
 	:return:
 	"""
+	load_dotenv()
 	slack_token = os.getenv('SLACK_TOKEN')
 	# Initialize a slack WebClient instance with your token
 	client = WebClient(token=slack_token)
