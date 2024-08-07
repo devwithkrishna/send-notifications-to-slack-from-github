@@ -76,6 +76,13 @@ def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: st
 			# get absolute path
 			gh_workspace = os.getenv('GITHUB_WORKSPACE')
 			full_path = f'{gh_workspace}/{file}'
+			print(f'Looking for file under {full_path}')
+			# Specify the directory you want to list
+			directory = '.'
+
+			# List all files and directories in the specified directory
+			files = os.listdir(directory)
+			print(files)
 			# Upload each file individually
 			upload_file = client.files_upload_v2(channel=channel_id, filename=file_name, file=full_path)
 			print(f"File {file} sent successfully to Slack channel {channel_id}")
