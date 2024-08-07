@@ -74,7 +74,8 @@ def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: st
 			# extract file names in case files are inside nested folders
 			file_name = os.path.basename(file)
 			# get absolute path
-			full_path = os.path.abspath(file)
+			gh_workspace = os.getenv('GITHUB_WORKSPACE')
+			full_path = f'{gh_workspace}/{file}'
 			# Upload each file individually
 			upload_file = client.files_upload_v2(channel=channel_id, filename=file_name, file=full_path)
 			print(f"File {file} sent successfully to Slack channel {channel_id}")
