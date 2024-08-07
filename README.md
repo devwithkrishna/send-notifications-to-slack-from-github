@@ -16,6 +16,8 @@ whether working remotely or in the office
 
 * **Configure your slack token as a secret named `SLACK_TOKEN`**
 
+* Pass your slack token in the workflow
+
 
 # Input parameters
 | Input      | Description  | Required   |
@@ -59,6 +61,12 @@ whether working remotely or in the office
 ```
 * This will send the file named `github-slack.jpg` inside `folder new`, `data.json and sata1.csv in workspace`, 
   and `demo.txt inside abc folder` to the slack channel with id `C07EUSM8EVS` 
+
+* Make sure you pass slack token for authentication
+```markdown
+env:
+  SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+```
 
 # Reference
 
