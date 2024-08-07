@@ -5,7 +5,7 @@ LABEL authors="githubofkrishnadhas"
 # Workdir
 WORKDIR /app
 # Copy files from current directory to wordir
-COPY pyproject.toml entrypoint.sh send_slack_alert.py /app/
+COPY . /app/
 # Install poetry
 RUN chmod +x entrypoint.sh &&  apt-get update -y && pip install poetry
 # Code file to execute when the docker container starts up (`entrypoint.sh`)

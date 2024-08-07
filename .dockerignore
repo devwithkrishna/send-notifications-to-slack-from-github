@@ -2,4 +2,5 @@ image-references/**
 .gitignore
 LICENSE
 *.md
+*.jpg
 

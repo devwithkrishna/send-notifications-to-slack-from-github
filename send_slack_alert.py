@@ -89,6 +89,7 @@ def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: st
 		except SlackApiError as e:
 			# Error handling in case the message fails to send
 			print(f"Error sending message: {e.response['error']}")
+			break
 
 
 def main():
