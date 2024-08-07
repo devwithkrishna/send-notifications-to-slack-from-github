@@ -64,6 +64,7 @@ def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: st
 	:return:
 	"""
 	load_dotenv()
+
 	slack_token = os.getenv('SLACK_TOKEN')
 	# Initialize a slack WebClient instance with your token
 	client = WebClient(token=slack_token)
@@ -80,11 +81,11 @@ def send_slack_notifications_with_only_file_upload(channel_id: str, bot_name: st
 
 			# Upload each file individually
 			upload_file = client.files_upload_v2(channel=channel_id, filename=file_name, file=full_path)
+
 			print(f"File {file} sent successfully to Slack channel {channel_id}")
 		except SlackApiError as e:
 			# Error handling in case the message fails to send
 			print(f"Error sending message: {e.response['error']}")
-
 
 
 def main():
@@ -101,7 +102,7 @@ def main():
 	args = parser.parse_args()
 
 	print(f'Process started at {get_date_time()}')
-
+  
 	channel_id = args.channel_id
 	bot_name = args.bot_name
 	file_name = args.file_name
